@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>React+Es6+Webpack</title>
+</head>
+
+<body>
+  <p>This is example of writing React.js code in ES6 syntax (main.jsx). Here we have used Babel to transpile ( transform ) our ES6 code into ES5 code, because browser is not able to understand the ES6 syntax at the moment. To compile ES6 code to browser understandable syntax we can directly use Babel command line tool or Webpack/Browserify like bundler + Babel. Here Webpack bundles or wraps our js/jsx code using babel to use it in browser.</p>
+
+  <p>Here we are using Babel and Webpack to transofrm ES6 code into ES5 and then provide it to browser.</p>
+  <p>package.json</p>
+  <pre>
+  {
+    "name": "react_isomorphic_example",
+    "dependencies": {
+        "react": "^0.14.3",
+        "react-dom": "^0.14.3"
+    },
+    "devDependencies": {
+        "babel-core": "^6.2.1",
+        "babel-loader": "^6.2.0",
+        "babel-preset-es2015": "^6.1.18",
+        "babel-preset-react": "^6.1.18",
+        "webpack": "^1.12.9"
+    },
+    "scripts": {
+        "webpack": "webpack --watch"
+    },
+    "babel": {
+        "presets": ["es2015", "react"]
+    }
+}
+  </pre>
+  <pre>
+  /* webpack.config.js */
+  var path = require('path');
+
+module.exports = {
+    entry: path.join(__dirname, 'main.jsx'),
+    output: {
+        path: __dirname,
+        filename: 'bundle.js'
+	},
+    module: {
+        loaders: [
+            {
+                loader: 'babel-loader',
+				exclude: /(node_modules|bower_components)/,
+                test: /\.jsx?$/,
+                query: {
+					presets: ['es2015','react']
+				},
+			}
+		]
+	},
+    stats: {
+        // Nice colored output
+       // colors: true
+	},
+    // Create Sourcemaps for the bundle
+    devtool: 'source-map',
+};
+</pre>
+  <p>Notice the "scripts" part in package.json file. it will register "webpack" command with "webpack --watch". wehn we will run npm run webpack command in command prompt it will read webpack.config.js and will take main.jsx file as entry point, will tranform it's code from ES6 to ES5 using babel-loader and will output bundled file named bundle.js. that we can include in index.html</p>
+  
+  <p>in bundle.js file webpack will automaticaly include all the other js files which we have defined in main.jsx using "import" module. If we are using require() function then it will bundle all the required files into single file which we have defined using require() method.</p>
+
+  <p>We can direcly use Babel to transform our ES6 code into ES5 without webpack. but then we need to include other js files manually. like react.js, react-dom.js and other .jsx component or module files which we have imported in main.jsx</p>
+  
+  <section id="react-root"></section>
+  <script src="main-jsx.js"></script>
+</body>
+
+</html>
